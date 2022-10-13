@@ -17,6 +17,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.wisdomleaf.R
+import com.wisdomleaf.utils.Logger
+import com.wisdomleaf.utils.Utility
 
 
 abstract class BaseActivity : AppCompatActivity(), BaseView {
@@ -31,7 +33,7 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
         receiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 onNetworkStateChange(isNetworkConnected(this@BaseActivity))
-                //Logger.e("status", isNetworkConnected(this@BaseActivity).toString())
+                Logger.e("status", isNetworkConnected(this@BaseActivity).toString())
             }
         }
         intentFilter = IntentFilter()
