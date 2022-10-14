@@ -24,7 +24,7 @@ class ListViewModel (app: Application) : AndroidViewModel(app) {
     val service = RetrofitFactory.get()
 
     fun getListData(request: ListProductRequest?): LiveData<DataWrapper<ArrayList<GetProductListResponse>>> {
-        val mDataWrapperCategory = DataWrapper<ArrayList<GetProductListResponse>>()
+        val mDataWrapperlist = DataWrapper<ArrayList<GetProductListResponse>>()
         val mResponseData = MutableLiveData<DataWrapper<ArrayList<GetProductListResponse>>>()
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -39,38 +39,38 @@ class ListViewModel (app: Application) : AndroidViewModel(app) {
                 withContext(Dispatchers.Main) {
                     try {
                         if (withCategoryResponse!!.isSuccessful && withCategoryResponse.code() == 200){
-                            mDataWrapperCategory.data = withCategoryResponse.body()
-                            mResponseData.value = mDataWrapperCategory
+                            mDataWrapperlist.data = withCategoryResponse.body()
+                            mResponseData.value = mDataWrapperlist
                         }else {
                             Logger.e(TAG, "Error :: " + withCategoryResponse.code())
-                            mDataWrapperCategory.apiError =
+                            mDataWrapperlist.apiError =
                                 APIError(withCategoryResponse.code(), withCategoryResponse.message())
-                            mResponseData.value = mDataWrapperCategory
+                            mResponseData.value = mDataWrapperlist
                         }
                     } catch (e: HttpException) {
                         Logger.e(TAG, "HttpException :: " + e.message)
-                        mDataWrapperCategory.apiError =
+                        mDataWrapperlist.apiError =
                             APIError(100, withCategoryResponse.message())
-                        mResponseData.value = mDataWrapperCategory
+                        mResponseData.value = mDataWrapperlist
                     } catch (e: Throwable) {
                         Logger.e(TAG, "Throwable :: " + e.message)
-                        mDataWrapperCategory.apiError =
+                        mDataWrapperlist.apiError =
                             APIError(100, withCategoryResponse.message())
-                        mResponseData.value = mDataWrapperCategory
+                        mResponseData.value = mDataWrapperlist
                     } catch (e: ConnectException) {
                         Logger.e(TAG, "ConnectException :: " + e.message)
 
-                        mDataWrapperCategory.apiError =
+                        mDataWrapperlist.apiError =
                             APIError(100, withCategoryResponse.message())
-                        mResponseData.value = mDataWrapperCategory
+                        mResponseData.value = mDataWrapperlist
                     }
                 }
             } catch (e: Throwable) {
                 Logger.e(TAG, "Error! ${e.message}")
-                mDataWrapperCategory.apiError = APIError(100, e.message!!)
+                mDataWrapperlist.apiError = APIError(100, e.message!!)
 
                 withContext(Dispatchers.Main) {
-                    mResponseData.value = mDataWrapperCategory
+                    mResponseData.value = mDataWrapperlist
                 }
             }
         }
