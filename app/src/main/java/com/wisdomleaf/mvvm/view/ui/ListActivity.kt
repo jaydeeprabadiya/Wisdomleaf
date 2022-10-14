@@ -24,7 +24,7 @@ import java.util.ArrayList
 
 class ListActivity : BaseActivity(), View.OnClickListener {
     private var TAG = this::class.java.simpleName
-    private var viewrocketModel: ListViewModel? = null
+    private var viewListModel: ListViewModel? = null
     private var recommendedProductAdapter: ListProductAdapter? = null
     private var request: ListProductRequest? = null
     private var manager: LinearLayoutManager? = null
@@ -39,14 +39,13 @@ class ListActivity : BaseActivity(), View.OnClickListener {
         setContentView(R.layout.activity_list)
 
 
-        viewrocketModel = ViewModelProvider(this).get(ListViewModel::class.java)
-        //binding.rcrocket.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        viewListModel = ViewModelProvider(this).get(ListViewModel::class.java)
         manager = LinearLayoutManager(this@ListActivity)
-        rcrocket?.layoutManager = manager
+        rclist?.layoutManager = manager
 
-        rcrocket.addOnScrollListener(recyclerViewOnScrollListener)
+        rclist.addOnScrollListener(recyclerViewOnScrollListener)
 
-        rcrocket.addItemDecoration(
+        rclist.addItemDecoration(
             DefaultItemDecorator(
                 0,
                 60
@@ -64,7 +63,7 @@ class ListActivity : BaseActivity(), View.OnClickListener {
 
 
 
-        rcrocket.addOnItemTouchListener(object :
+        rclist.addOnItemTouchListener(object :
             RecyclerView.OnItemTouchListener {
 
             var gestureDetector =
@@ -150,7 +149,7 @@ class ListActivity : BaseActivity(), View.OnClickListener {
         if (ConnectivityReceiver.isNetworkConnected(viewActivity())) {
             showProgress()
 
-            viewrocketModel?.getListData(request)!!.observe(
+            viewListModel?.getListData(request)!!.observe(
                     this@ListActivity,
                     ApiObserver(object :
                         ApiObserver.ChangeListener<ArrayList<GetProductListResponse>> {
@@ -160,7 +159,7 @@ class ListActivity : BaseActivity(), View.OnClickListener {
                                 if (dataWrapper?.size!! > 0) {
                                     if (pageNumber == 1) {
                                         recommendedProductAdapter = ListProductAdapter(dataWrapper)
-                                        rcrocket.adapter = recommendedProductAdapter
+                                        rclist.adapter = recommendedProductAdapter
                                     }
                                     else {
                                         recommendedProductAdapter?.addData(dataWrapper)
@@ -191,63 +190,6 @@ class ListActivity : BaseActivity(), View.OnClickListener {
                         }
                     })
                 )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-           /* observe(
-                this@ListActivity,
-                ApiObserver<GetRecommendedProductResponse>(object :
-                    ApiObserver.ChangeListener<GetRecommendedProductResponse> {
-                    override fun onSuccess(response: GetRecommendedProductResponse?) {
-                        hideProgress()
-                        Log.e(TAG, "" + response);
-
-                        if (response!=null) {
-
-                            if (pageNumber == 1) {
-                                recommendedProductAdapter =
-                                    RecommendedProductAdapter(response)
-                                rcylRecommended.adapter = recommendedProductAdapter
-
-                                if (response?.result?.size!! > 0) {
-                                    lblNoItems.visibility = View.GONE
-                                } else {
-                                    lblNoItems.visibility = View.VISIBLE
-                                }
-                            } else {
-                                recommendedProductAdapter?.addData(response?.result)
-                                recommendedProductAdapter?.notifyDataSetChanged()
-                            }
-
-
-                            if (response?.result?.size!! > 0) {
-                                loading = true
-                            }
-
-                        }
-                    }
-
-                    override fun onError(error: APIError?) {
-                        hideProgress()
-                        showToast(error?.httpErrorMessage!!)
-                    }
-                })
-            )
-*/
         }
         else {
             showToast(viewActivity()?.getString(R.string.no_internet_message)!!)
