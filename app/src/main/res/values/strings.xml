@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Wisdomleaf</string>
     <string name="no_internet_message">Please check you internet connection</string>
+
+    <string name="ok">Ok</string>
+    <string name="title">title</string>
+
 </resources>

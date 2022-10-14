@@ -9,10 +9,12 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.wisdomleaf.R
 import com.wisdomleaf.base.BaseActivity
 import com.wisdomleaf.collection.ListProductRequest
 import com.wisdomleaf.componet.DefaultItemDecorator
+import com.wisdomleaf.dialouge.AlertDialog
 import com.wisdomleaf.mvvm.model.APIError
 import com.wisdomleaf.mvvm.model.response.GetProductListResponse
 import com.wisdomleaf.mvvm.view.adapter.ListProductAdapter
@@ -22,15 +24,16 @@ import com.wisdomleaf.webservice.ApiObserver
 import kotlinx.android.synthetic.main.activity_list.*
 import java.util.ArrayList
 
-class ListActivity : BaseActivity(), View.OnClickListener {
+class ListActivity : BaseActivity(), View.OnClickListener,AlertDialog.RegisterClickListener {
     private var TAG = this::class.java.simpleName
     private var viewListModel: ListViewModel? = null
-    private var recommendedProductAdapter: ListProductAdapter? = null
+    private var listProductAdapter: ListProductAdapter? = null
     private var request: ListProductRequest? = null
     private var manager: LinearLayoutManager? = null
     private var pageNumber = 1
     private var pageSize = 20
     private var loading = true
+    private var registerDialog : AlertDialog? = null
 
 
 
@@ -45,24 +48,24 @@ class ListActivity : BaseActivity(), View.OnClickListener {
 
         rclist.addOnScrollListener(recyclerViewOnScrollListener)
 
-        rclist.addItemDecoration(
-            DefaultItemDecorator(
-                0,
-                60
-            )
-        )
-
-
+        /*request Parameter */
         request = ListProductRequest(
             pageNumber,
             pageSize,
         )
 
+        /*API Call*/
         getList(request)
 
+        /*Swipe to referesh*/
+        swipeToRefresh?.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
+            override fun onRefresh() {
+                swipeToRefresh?.setRefreshing(false)
+                getList(request)
+            }
+        })
 
-
-
+        /*click event recyclerview*/
         rclist.addOnItemTouchListener(object :
             RecyclerView.OnItemTouchListener {
 
@@ -81,7 +84,11 @@ class ListActivity : BaseActivity(), View.OnClickListener {
                 if (child != null && gestureDetector.onTouchEvent(e)) {
                     val position = rv.getChildAdapterPosition(child)
 
-
+                    registerDialog = AlertDialog(this@ListActivity,this@ListActivity,
+                        listProductAdapter?.getData()?.get(position)?.author.toString()
+                    )
+                    registerDialog?.setCancelable(false)
+                    registerDialog?.show()
 
                 }
 
@@ -99,52 +106,7 @@ class ListActivity : BaseActivity(), View.OnClickListener {
     }
 
     
-
-/*
-    private fun getOffers() {
-
-        when {
-            isNetworkConnected(viewActivity()) -> {
-                showProgress()
-                viewrocketModel!!.getCategoryData()
-                    .observe(
-                        this,
-                        ApiObserver(object :
-                            ApiObserver.ChangeListener<ArrayList<GetRocketResponse>> {
-                            override fun onSuccess(dataWrapper: ArrayList<GetRocketResponse>?) {
-                                try {
-                                    hideProgress()
-                                    if (dataWrapper?.size!! > 0) {
-                                        rocketAdapter = RocketlistAdapter(dataWrapper)
-                                        rcrocket.adapter = rocketAdapter
-
-
-                                    }
-                                }
-                                catch (e:Exception)
-                                {
-                                    e.printStackTrace()
-                                }
-                            }
-
-                            override fun onError(error: APIError?) {
-                                try {
-                                    hideProgress()
-                                    showToast(error?.httpErrorMessage!!)
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                }
-                            }
-                        })
-                    )
-            }
-            else -> {
-                showToast(getString(R.string.no_internet_message))
-            }
-        }
-    }
-*/
-
+    /*API Calling*/
     private fun getList(request: ListProductRequest?) {
         if (ConnectivityReceiver.isNetworkConnected(viewActivity())) {
             showProgress()
@@ -158,12 +120,12 @@ class ListActivity : BaseActivity(), View.OnClickListener {
                                 hideProgress()
                                 if (dataWrapper?.size!! > 0) {
                                     if (pageNumber == 1) {
-                                        recommendedProductAdapter = ListProductAdapter(dataWrapper)
-                                        rclist.adapter = recommendedProductAdapter
+                                        listProductAdapter = ListProductAdapter(dataWrapper)
+                                        rclist.adapter = listProductAdapter
                                     }
                                     else {
-                                        recommendedProductAdapter?.addData(dataWrapper)
-                                        recommendedProductAdapter?.notifyDataSetChanged()
+                                        listProductAdapter?.addData(dataWrapper)
+                                        listProductAdapter?.notifyDataSetChanged()
                                     }
 
                                     if (dataWrapper?.size!! > 0) {
@@ -236,6 +198,11 @@ class ListActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(p0: View?) {
+
+    }
+
+    override fun txtOkRegisterListener() {
+        registerDialog?.dismiss()
 
     }
 }

@@ -4,7 +4,8 @@
     android:id="@+id/clMain"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/_3sdp">
+    android:layout_margin="@dimen/_3sdp"
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -31,12 +32,13 @@
                 android:layout_marginLeft="@dimen/_10sdp"
                 android:maxLines="1"
                 android:textColor="@color/black"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:textSize="@dimen/_11ssp"
                 app:layout_constraintStart_toStartOf="parent"
-               app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/txtcountry"
+                android:id="@+id/txtdiscription"
                 style="@style/regular_text_style"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -61,7 +63,7 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_11ssp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtcountry"
+                app:layout_constraintTop_toBottomOf="@+id/txtdiscription"
                 app:layout_constraintStart_toStartOf="parent" />
 
 
@@ -70,7 +72,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
-        android:id="@+id/imag_rocket"
+        android:id="@+id/imag_list"
         android:layout_width="@dimen/_120sdp"
         android:layout_height="@dimen/_120sdp"
         android:layout_marginTop="@dimen/_5sdp"

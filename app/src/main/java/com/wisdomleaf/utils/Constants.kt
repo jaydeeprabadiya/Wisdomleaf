@@ -4,7 +4,7 @@ interface Constants {
 
     /*Base URL*/
     companion object {
-        val BASE_URL = "https://api.spacexdata.com/v4/"
+        val BASE_URL = "https://picsum.photos/v2/"
 
     }
 
@@ -23,23 +23,7 @@ interface Constants {
    * */
     interface ApiMethods {
         companion object {
-
-            const val GET_ROCKET = "rockets"
-            const val GET_ROCKET_DETAILS = "https://picsum.photos/v2/list?"
-            const val GET_CHECK_STATUS = "http://ggicsangipur.in/loan/public/api/checkStatus"
-            const val GET_INSTRUMENT_STATUS = "https://md.lmaxglobal.io/fixprof/instruments/depths"
-
-
+            const val GET_LIST = "list?"
         }
     }
-
-    interface BUNDLE_KEY {
-        companion object {
-            const val ROKET_ID = "ROKET_ID"
-
-        }
-
-    }
-
-
 }

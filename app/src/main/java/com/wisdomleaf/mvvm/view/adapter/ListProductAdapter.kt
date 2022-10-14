@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.wisdomleaf.R
 import com.wisdomleaf.mvvm.model.response.GetProductListResponse
-import kotlinx.android.synthetic.main.raw_recommended_product_iteam.view.*
+import kotlinx.android.synthetic.main.raw_product_iteam.view.*
 
 class ListProductAdapter(internal var result: ArrayList<GetProductListResponse>?) :
     RecyclerView.Adapter<ListProductAdapter.ViewHolder>() {
@@ -19,7 +19,7 @@ class ListProductAdapter(internal var result: ArrayList<GetProductListResponse>?
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.raw_recommended_product_iteam, parent, false)
+                .inflate(R.layout.raw_product_iteam, parent, false)
         context = parent?.context
         return ViewHolder(view)
     }
@@ -33,11 +33,11 @@ class ListProductAdapter(internal var result: ArrayList<GetProductListResponse>?
         val items = result?.get(position)
 
         Glide.with(context!!).load(items?.download_url).placeholder(R.drawable.ic_thumnail)
-            .into(holder.imgBanner)
-        holder.imgBanner.clipToOutline = true
-        holder.txtTitle.text = items?.author
-        holder.txtDescription.text = items?.width.toString()
-        holder.txtPrice.text = "$" + items?.height.toString()
+            .into(holder.imglist)
+        holder.imglist.clipToOutline = true
+        holder.txtAuthor.text = items?.author
+        //holder.txtDescription.text = items?.width.toString()
+
     }
 
     fun getData(): ArrayList<GetProductListResponse>? {
@@ -49,9 +49,9 @@ class ListProductAdapter(internal var result: ArrayList<GetProductListResponse>?
     }
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        val imgBanner = v.imgBanner
-        val txtTitle = v.txtTitle
-        val txtDescription = v.txtDescription
-        val txtPrice = v.txtPrice
+        val imglist = v.imag_list
+        val txtAuthor = v.txtname
+        val txtDescription = v.txtdiscription
+
     }
 }
